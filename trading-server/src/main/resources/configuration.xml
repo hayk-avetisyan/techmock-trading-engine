@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="priceListener" class="am.techmock.trading.engine.core.external.listeners.PriceListener"/>
+
+    <bean id="metaListener" class="am.techmock.trading.engine.core.external.MetaSyncListener">
+        <constructor-arg ref="priceListener"/>
+    </bean>
+
+
+    <bean id="tradeManager" class="am.techmock.trading.engine.core.external.MetaManager">
+        <constructor-arg ref="metaApi"/>
+        <constructor-arg ref="metaListener"/>
+    </bean>
+
+    <bean id="engine" class="am.techmock.trading.engine.core.internal.Engine">
+        <constructor-arg ref="tradeManager"/>
+    </bean>
+</beans>
