@@ -7,7 +7,6 @@ import org.deeplearning4j.util.ModelSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.File;
 import java.io.IOException;
 
@@ -16,16 +15,14 @@ public class PrepareNetwork {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrepareNetwork.class);
 
-
-	public static final int EPOCHS = 15;
-	public static final int BATCH_SIZE = 64;
+	public static final int EPOCHS = 45;
+	public static final int EPOCH_SIZE = 200;
 	public static final int WINDOW_SIZE = 20;
 	public static final int PREDICTION_STEP = 1;
 
 	public static void prepare(String networkPath, String dataPath) throws IOException {
 
-
-		TradingDataIterator dataIterator = new TradingDataIterator(dataPath, BATCH_SIZE, WINDOW_SIZE, PREDICTION_STEP);
+		TradingDataIterator dataIterator = new TradingDataIterator(dataPath, EPOCH_SIZE, WINDOW_SIZE, PREDICTION_STEP);
 		MultiLayerNetwork net = LSTMNetworkFactory.buildNetwork(dataIterator.inputColumns(), dataIterator.totalOutcomes());
 
 		long start;

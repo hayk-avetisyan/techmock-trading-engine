@@ -42,6 +42,7 @@ public class Polygon {
 			}
 
 			prediction = net.output(observation);
+			net.clearLayersStates();
 			System.out.println(prediction);
 		}
 

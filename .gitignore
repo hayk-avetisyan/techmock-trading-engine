@@ -4,3 +4,4 @@ target
 logs
 .metaapi
 .DS_Store
+networks/*.zip
