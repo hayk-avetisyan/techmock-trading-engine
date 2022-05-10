@@ -17,7 +17,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 public class LSTMNetworkFactory {
 
 
-	public static MultiLayerNetwork buildNetwork(int nIn, int nOut) {
+	public static MultiLayerNetwork buildNetwork(int nIn, int nOut, int windowSize) {
 
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
 				.seed(System.currentTimeMillis())
@@ -53,8 +53,8 @@ public class LSTMNetworkFactory {
 						.lossFunction(LossFunctions.LossFunction.MSE)
 						.build())
 				.backpropType(BackpropType.TruncatedBPTT)
-				.tBPTTForwardLength(22)
-				.tBPTTBackwardLength(22)
+				.tBPTTForwardLength(windowSize)
+				.tBPTTBackwardLength(windowSize)
 				.build();
 
 

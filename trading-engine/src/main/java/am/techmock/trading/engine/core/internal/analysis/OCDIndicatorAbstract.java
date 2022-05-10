@@ -7,9 +7,9 @@ import org.ta4j.core.indicators.helpers.OpenPriceIndicator;
 /**
  * Open/close prices' quotient indicator
  */
-public class OCQIndicator extends QuotientIndicator {
+public class OCDIndicatorAbstract extends NamedDifferenceIndicatorAbstract {
 
-	public OCQIndicator(BarSeries series) {
-		super(new OpenPriceIndicator(series), new ClosePriceIndicator(series));
+	public OCDIndicatorAbstract(BarSeries series) {
+		super(new OpenPriceIndicator(series), new ClosePriceIndicator(series), IndicatorType.OCD);
 	}
 }

@@ -1,7 +1,7 @@
 package am.techmock.trading.engine.core.internal.analysis;
 
+import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.CachedIndicator;
-import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.num.Num;
 
 /**
@@ -9,20 +9,19 @@ import org.ta4j.core.num.Num;
  */
 public class SMIndicator extends CachedIndicator<Num> {
 
-	private ClosePriceIndicator closePrices;
+	private Indicator<Num> indicator;
 	private StochasticPriceIndicator stochasticPrices;
 
 
 	SMIndicator(StochasticPriceIndicator stochasticPrices) {
 		super(stochasticPrices);
 		this.stochasticPrices = stochasticPrices;
-		this.closePrices = stochasticPrices.getClosePrices();
+		this.indicator = stochasticPrices.getIndicator();
 	}
-
 
 	@Override
 	protected Num calculate(int index) {
-		return this.closePrices.getValue(index).minus(
+		return this.indicator.getValue(index).minus(
 				this.stochasticPrices.getValue(index)
 		);
 	}

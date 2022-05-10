@@ -1,28 +1,27 @@
 package am.techmock.trading.engine.core.internal.analysis;
 
+import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.CachedIndicator;
-import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.num.DecimalNum;
-import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
 
 public class StochasticPriceIndicator extends CachedIndicator<Num> {
 
 	private static final Num CONSTANT_RATIO = DecimalNum.valueOf(0.5);
 
-	private ClosePriceIndicator closePrices;
+	private Indicator<Num> indicator;
 	private int startIndex;
 	private int barCount;
 
-	StochasticPriceIndicator(ClosePriceIndicator closePrices, int barCount) {
-		super(closePrices);
-		this.startIndex = closePrices.getBarSeries().getBeginIndex();
-		this.closePrices = closePrices;
+	StochasticPriceIndicator(Indicator<Num> indicator, int barCount) {
+		super(indicator);
+		this.startIndex = indicator.getBarSeries().getBeginIndex();
+		this.indicator = indicator;
 		this.barCount = barCount;
 	}
 
-	ClosePriceIndicator getClosePrices() {
-		return this.closePrices;
+	Indicator<Num> getIndicator() {
+		return this.indicator;
 	}
 
 	/**
@@ -40,11 +39,11 @@ public class StochasticPriceIndicator extends CachedIndicator<Num> {
 	protected Num calculate(int index) {
 		Num LL, HH, indexPrice;
 
-		HH = LL = closePrices.getValue(index);
+		HH = LL = indicator.getValue(index);
 		int period = Math.min(barCount, index - startIndex);
 
 		for (int i = 1; i < period; i++) {
-			indexPrice = closePrices.getValue(index - i);
+			indexPrice = indicator.getValue(index - i);
 			LL = indexPrice.min(LL);
 			HH = indexPrice.max(HH);
 		}

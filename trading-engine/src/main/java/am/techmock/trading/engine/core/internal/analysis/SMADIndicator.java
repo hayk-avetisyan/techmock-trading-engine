@@ -6,12 +6,13 @@ import org.ta4j.core.indicators.helpers.PriceIndicator;
 /**
  * Simple Moving average quotient indicator
  */
-public class SMAQIndicator extends QuotientIndicator {
+public class SMADIndicator extends NamedDifferenceIndicatorAbstract {
 
-	public SMAQIndicator(PriceIndicator indicator, int shortBarCount, int longBarCount) {
+	public SMADIndicator(NamedIndicator indicator, int shortBarCount, int longBarCount) {
 		super(
 				new SMAIndicator(indicator, shortBarCount),
-				new SMAIndicator(indicator, longBarCount)
+				new SMAIndicator(indicator, longBarCount),
+				IndicatorType.SMAD
 		);
 	}
 }

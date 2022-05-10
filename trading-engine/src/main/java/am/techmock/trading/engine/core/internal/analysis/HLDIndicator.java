@@ -8,9 +8,9 @@ import org.ta4j.core.indicators.helpers.LowPriceIndicator;
 /**
  * High/Low prices' quotient indicator
  */
-public class HLQIndicator extends QuotientIndicator {
+public class HLDIndicator extends NamedDifferenceIndicatorAbstract {
 
-	public HLQIndicator(BarSeries series) {
-		super(new HighPriceIndicator(series), new LowPriceIndicator(series));
+	public HLDIndicator(BarSeries series) {
+		super(new HighPriceIndicator(series), new LowPriceIndicator(series), IndicatorType.HLD);
 	}
 }

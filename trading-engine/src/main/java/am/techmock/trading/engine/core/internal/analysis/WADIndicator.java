@@ -2,7 +2,6 @@ package am.techmock.trading.engine.core.internal.analysis;
 
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.indicators.CachedIndicator;
 import org.ta4j.core.num.DecimalNum;
 import org.ta4j.core.num.Num;
 
@@ -10,12 +9,12 @@ import org.ta4j.core.num.Num;
  * Williams' Accumulation/Distribution indicator
  */
 @SuppressWarnings("unused")
-public class WADIndicator extends CachedIndicator<Num> {
+public class WADIndicator extends AbstractNamedIndicator {
 
 	private static final Num ZERO = DecimalNum.valueOf(0);
 
 	public WADIndicator(BarSeries series) {
-		super(series);
+		super(series, IndicatorType.WAD);
 	}
 
 	/**

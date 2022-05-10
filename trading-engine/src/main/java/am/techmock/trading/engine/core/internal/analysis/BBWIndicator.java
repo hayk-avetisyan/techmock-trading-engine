@@ -1,13 +1,13 @@
 package am.techmock.trading.engine.core.internal.analysis;
 
-import org.ta4j.core.indicators.CachedIndicator;
+import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.SMAIndicator;
 import org.ta4j.core.indicators.helpers.PriceIndicator;
 import org.ta4j.core.indicators.statistics.StandardDeviationIndicator;
 import org.ta4j.core.num.DecimalNum;
 import org.ta4j.core.num.Num;
 
-public class BBWIndicator extends CachedIndicator<Num> {
+public class BBWIndicator extends AbstractNamedIndicator {
 
 	private static final Num DEVIATION_RATIO = DecimalNum.valueOf(2);
 
@@ -15,8 +15,8 @@ public class BBWIndicator extends CachedIndicator<Num> {
 	private BBUpperIndicator BBU;
 	private BBLowerIndicator BBL;
 
-	public BBWIndicator(PriceIndicator indicator, int barCount) {
-		super(indicator);
+	public BBWIndicator(Indicator<Num> indicator, int barCount) {
+		super(indicator, IndicatorType.BBW);
 		BBM = new SMAIndicator(indicator, barCount);
 		StandardDeviationIndicator SD = new StandardDeviationIndicator(BBM, barCount);
 

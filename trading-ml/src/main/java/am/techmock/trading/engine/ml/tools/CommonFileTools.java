@@ -9,9 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;
 import org.ta4j.core.BaseBarSeries;
-import org.ta4j.core.BaseBarSeriesBuilder;
 import org.ta4j.core.num.DecimalNum;
-import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
 
 import java.io.File;
@@ -42,11 +40,11 @@ public class CommonFileTools {
 			while (reader.hasNext()) {
 				data = reader.next();
 				date = getDate(data);
-				open = getAsDouble(data, 1);
-				high = getAsDouble(data, 2);
-				low = getAsDouble(data, 3);
-				close = getAsDouble(data, 4);
-				volume = getAsDouble(data, 6);
+				open = readPricePip(data, 1);
+				high = readPricePip(data, 2);
+				low = readPricePip(data, 3);
+				close = readPricePip(data, 4);
+				volume = readVolume(data);
 				series.addBar(new BaseBar(Duration.ofDays(1), date, open, high, low, close, volume, DecimalNum.valueOf(0)));
 			}
 
@@ -83,8 +81,14 @@ public class CommonFileTools {
 		);
 	}
 
-	private static DecimalNum getAsDouble(List<Writable> data, int index) {
-		return DecimalNum.valueOf(data.get(index).toDouble());
+	private static DecimalNum readVolume(List<Writable> data) {
+		return DecimalNum.valueOf(data.get(6).toDouble());
+	}
+
+	private static DecimalNum readPricePip(List<Writable> data, int index) {
+		double price = data.get(index).toDouble();
+		int pip = (int) Math.round((price - (int) price) * 10000);
+		return DecimalNum.valueOf(pip);
 	}
 
 }
