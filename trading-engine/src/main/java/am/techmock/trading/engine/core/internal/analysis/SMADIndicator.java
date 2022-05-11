@@ -1,12 +1,11 @@
 package am.techmock.trading.engine.core.internal.analysis;
 
 import org.ta4j.core.indicators.SMAIndicator;
-import org.ta4j.core.indicators.helpers.PriceIndicator;
 
 /**
- * Simple Moving average quotient indicator
+ * Simple Moving average difference indicator
  */
-public class SMADIndicator extends NamedDifferenceIndicatorAbstract {
+public class SMADIndicator extends AbstractNamedDifferenceIndicator {
 
 	public SMADIndicator(NamedIndicator indicator, int shortBarCount, int longBarCount) {
 		super(

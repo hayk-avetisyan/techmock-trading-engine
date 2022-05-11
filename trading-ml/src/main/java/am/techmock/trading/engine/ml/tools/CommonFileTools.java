@@ -87,7 +87,7 @@ public class CommonFileTools {
 
 	private static DecimalNum readPricePip(List<Writable> data, int index) {
 		double price = data.get(index).toDouble();
-		int pip = (int) Math.round((price - (int) price) * 10000);
+		double pip = (price - (int) price) * 100;
 		return DecimalNum.valueOf(pip);
 	}
 

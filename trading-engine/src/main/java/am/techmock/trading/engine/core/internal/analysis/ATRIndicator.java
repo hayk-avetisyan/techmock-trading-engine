@@ -4,7 +4,6 @@ import org.ta4j.core.BarSeries;
 
 public class ATRIndicator extends org.ta4j.core.indicators.ATRIndicator implements NamedIndicator {
 
-
 	public ATRIndicator(BarSeries series, int barCount) {
 		super(series, barCount);
 	}

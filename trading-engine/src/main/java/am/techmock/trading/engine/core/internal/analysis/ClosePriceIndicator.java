@@ -10,6 +10,6 @@ public class ClosePriceIndicator extends org.ta4j.core.indicators.helpers.CloseP
 
 	@Override
 	public IndicatorType getType() {
-		return IndicatorType.CLP;
+		return IndicatorType.ClosePrice;
 	}
 }

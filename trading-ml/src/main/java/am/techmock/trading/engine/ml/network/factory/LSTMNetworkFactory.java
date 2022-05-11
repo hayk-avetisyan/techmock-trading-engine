@@ -1,5 +1,6 @@
 package am.techmock.trading.engine.ml.network.factory;
 
+import com.sun.tools.javac.comp.Check;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.BackpropType;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -10,6 +11,7 @@ import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.CheckpointListener;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -17,7 +19,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 public class LSTMNetworkFactory {
 
 
-	public static MultiLayerNetwork buildNetwork(int nIn, int nOut, int windowSize) {
+	public static MultiLayerNetwork buildNetwork(int nIn, int nOut, int windowSize, String networkDirectory) {
 
 		MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
 				.seed(System.currentTimeMillis())
@@ -59,6 +61,10 @@ public class LSTMNetworkFactory {
 
 
 		MultiLayerNetwork network = new MultiLayerNetwork(conf);
+		network.setListeners(
+				new ScoreIterationListener(500),
+				new CheckpointListener.Builder(networkDirectory).saveEveryNEpochs(5).keepAll().build()
+		);
 		network.init();
 		return network;
 	}

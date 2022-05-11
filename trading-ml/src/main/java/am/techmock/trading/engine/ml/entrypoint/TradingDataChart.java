@@ -24,15 +24,17 @@ public class TradingDataChart extends JFrame {
 		TradingDataProvider provider = new TradingDataProvider(CommonFileTools.loadSeries("EURUSD.csv"));
 
 		ChartPanel[] charts = new ChartPanel[]{
-				constructChart(provider, Arrays.asList(IndicatorType.CLP, IndicatorType.EMA), startIndex, length),
-				constructChart(provider, Arrays.asList(IndicatorType.OCD, IndicatorType.HLD, IndicatorType.MD, IndicatorType.SMAD), startIndex, length),
+				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.EMA), startIndex, length),
+				constructChart(provider, Arrays.asList(IndicatorType.HighPrice, IndicatorType.LowPrice, IndicatorType.OpenPrice, IndicatorType.ClosePrice), startIndex, length),
+				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.MomentumLong, IndicatorType.MomentumShort), startIndex, length),
+				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.SMALong, IndicatorType.SMAShort), startIndex, length),
+				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.BBW), startIndex, length),
 				constructChart(provider, IndicatorType.SMI, startIndex, length),
 				constructChart(provider, IndicatorType.BBW, startIndex, length),
 				constructChart(provider, IndicatorType.ATR, startIndex, length),
 				constructChart(provider, IndicatorType.MACD, startIndex, length),
 				constructChart(provider, IndicatorType.WR, startIndex, length),
 				constructChart(provider, IndicatorType.ROC, startIndex, length),
-				constructChart(provider, Arrays.asList(IndicatorType.CLP, IndicatorType.MD), startIndex, length)
 		};
 
 		show(charts);

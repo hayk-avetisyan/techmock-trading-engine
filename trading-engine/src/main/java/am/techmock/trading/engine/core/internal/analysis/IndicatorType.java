@@ -1,11 +1,20 @@
 package am.techmock.trading.engine.core.internal.analysis;
 
 public enum IndicatorType {
+	HighPrice,
+	LowPrice,
+	OpenPrice,
+	ClosePrice,
+	MomentumShort,
+	MomentumLong,
+	Momentum,
 	MACD,
 	CCI,
 	ATR,
 	BBW,
 	EMA,
+	SMAShort,
+	SMALong,
 	SMAD,
 	MD,
 	ROC,
@@ -14,5 +23,4 @@ public enum IndicatorType {
 	WAD,
 	OCD,
 	HLD,
-	CLP
 }
