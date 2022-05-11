@@ -25,10 +25,7 @@ public class TradingDataChart extends JFrame {
 
 		ChartPanel[] charts = new ChartPanel[]{
 				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.EMA), startIndex, length),
-				constructChart(provider, Arrays.asList(IndicatorType.HighPrice, IndicatorType.LowPrice, IndicatorType.OpenPrice, IndicatorType.ClosePrice), startIndex, length),
-				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.MomentumLong, IndicatorType.MomentumShort), startIndex, length),
-				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.SMALong, IndicatorType.SMAShort), startIndex, length),
-				constructChart(provider, Arrays.asList(IndicatorType.ClosePrice, IndicatorType.BBW), startIndex, length),
+				constructChart(provider, Arrays.asList(IndicatorType.SMAD, IndicatorType.MD, IndicatorType.HLD, IndicatorType.OCD), startIndex, length),
 				constructChart(provider, IndicatorType.SMI, startIndex, length),
 				constructChart(provider, IndicatorType.BBW, startIndex, length),
 				constructChart(provider, IndicatorType.ATR, startIndex, length),

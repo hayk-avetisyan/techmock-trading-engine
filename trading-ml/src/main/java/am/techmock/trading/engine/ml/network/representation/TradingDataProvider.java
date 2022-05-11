@@ -16,30 +16,25 @@ import java.util.List;
 public class TradingDataProvider {
 
 	private List<NamedIndicator> indicators;
-	private NamedIndicator ClosePrice;
+	private NamedIndicator closePrice;
 
 	public TradingDataProvider(BarSeries series) {
-		this.ClosePrice = new ClosePriceIndicator(series);
+		this.closePrice = new ClosePriceIndicator(series);
 
-		NamedIndicator MACD = new MACDIndicator(ClosePrice, 12, 26);
+		NamedIndicator MACD = new MACDIndicator(closePrice, 12, 26);
 		NamedIndicator CCI = new CCIIndicator(series, 20);
 		NamedIndicator ATR = new ATRIndicator(series, 14);
-		NamedIndicator BBW = new BBWIndicator(ClosePrice, 20);
-		NamedIndicator EMA = new EMAIndicator(ClosePrice, 20);
-		NamedIndicator ROC = new ROCIndicator(ClosePrice, 14);
-		NamedIndicator SMI = new SMIIndicator(ClosePrice);
+		NamedIndicator BBW = new BBWIndicator(closePrice, 20);
+		NamedIndicator EMA = new EMAIndicator(closePrice, 20);
+		NamedIndicator SMAD = new SMADIndicator(closePrice, 12, 30);
+		NamedIndicator MD = new MDIndicator(closePrice, 12, 26);
+		NamedIndicator ROC = new ROCIndicator(closePrice, 14);
+		NamedIndicator SMI = new SMIIndicator(closePrice);
 		NamedIndicator WR = new WilliamsRIndicator(series, 14);
-		NamedIndicator SMAShort = new SMAIndicator(ClosePrice, 12, IndicatorType.SMAShort);
-		NamedIndicator SMALong = new SMAIndicator(ClosePrice, 40, IndicatorType.SMALong);
-		NamedIndicator MomentumShort = new MomentumIndicator(ClosePrice, 12, IndicatorType.MomentumShort);
-		NamedIndicator MomentumLong = new MomentumIndicator(ClosePrice, 26, IndicatorType.MomentumLong);
-		NamedIndicator OpenPrice = new OpenPriceIndicator(series);
-		NamedIndicator HighPrice = new HighPriceIndicator(series);
-		NamedIndicator LowPrice = new LowPriceIndicator(series);
+		NamedIndicator OCD = new OCDIndicator(series);
+		NamedIndicator HLD = new HLDIndicator(series);
 
-		this.indicators = Arrays.asList(
-				MACD, CCI, ATR, BBW, EMA, ROC, SMI, WR,
-				SMAShort, SMALong, MomentumShort, MomentumLong, OpenPrice, ClosePrice, HighPrice, LowPrice);
+		this.indicators = Arrays.asList(MACD, CCI, ATR, BBW, EMA, SMAD, MD, ROC, SMI, WR, OCD, HLD);
 	}
 
 	public double data(int index, int featureIndex) {
@@ -51,7 +46,7 @@ public class TradingDataProvider {
 	}
 
 	public double closePrice(int index) {
-		return this.ClosePrice.getValue(index).doubleValue();
+		return this.closePrice.getValue(index).doubleValue();
 	}
 
 	public int featureSize() {
@@ -59,6 +54,6 @@ public class TradingDataProvider {
 	}
 
 	public BarSeries getSeries() {
-		return ClosePrice.getBarSeries();
+		return closePrice.getBarSeries();
 	}
 }
