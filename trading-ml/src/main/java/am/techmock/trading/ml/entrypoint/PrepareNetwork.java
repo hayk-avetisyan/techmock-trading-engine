@@ -6,6 +6,8 @@ import am.techmock.trading.ml.network.DataNormalizer;
 import am.techmock.trading.ml.network.representation.TradingDataIterator;
 import am.techmock.trading.ml.network.representation.TradingDataProvider;
 import am.techmock.trading.ml.tools.CommonFileTools;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ public class PrepareNetwork {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrepareNetwork.class);
 
-	public static final int EPOCHS = 1500;
+	public static final int EPOCHS = 2000;
 	public static final int BATCH_SIZE = 20;
 	public static final int PREDICTION_STEP = 1;
 
@@ -37,9 +39,14 @@ public class PrepareNetwork {
 
 		logger.info("\n{}\n", net.summary());
 
-		long start;
-		for (int i = 0; i < EPOCHS; i++) {
-			start = System.currentTimeMillis();
+		ProgressBar pb = new ProgressBarBuilder()
+				.setTaskName("Training").setInitialMax(EPOCHS)
+				.setUpdateIntervalMillis(3000).setMaxRenderedLength(150)
+				.continuousUpdate().build();
+
+		long  start = System.currentTimeMillis();
+
+		for (int epoch = 1; epoch <= EPOCHS; epoch++) {
 
 			while (iterator.hasNext()) {
 				net.fit(iterator);
@@ -49,11 +56,14 @@ public class PrepareNetwork {
 			net.rnnClearPreviousState();
 			net.incrementEpochCount();
 
-			logger.info("Epoch: {}, Score: {}, Duration: {}", i + 1, net.score(), time(System.currentTimeMillis() - start));
+			pb.setExtraMessage("Score: "+ net.score());
+			pb.step();
 			System.gc();
 		}
 
-		logger.info("Training finished");
+		pb.pause();
+		logger.info("Training finished. Duration: {}", time(System.currentTimeMillis() - start));
+
 		ModelSerializer.writeModel(net, new File(network),true);
 		logger.info("Model saved - {}", network);
 		System.exit(0);
@@ -61,6 +71,6 @@ public class PrepareNetwork {
 
 	public static String time(long m) {
 		long s = m / 1000;
-		return String.format("%02d:%02d.%03d", s / 60, s % 60, m % 1000);
+		return String.format("%02d:%02d:%02d.%03d", s / 60 / 60, s / 60, s % 60, m % 1000);
 	}
 }
