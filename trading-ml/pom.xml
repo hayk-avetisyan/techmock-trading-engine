@@ -7,34 +7,16 @@
     <parent>
         <groupId>am.techmock</groupId>
         <artifactId>trading-engine-server</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.1</version>
     </parent>
     <artifactId>trading-ml</artifactId>
 
     <dependencies>
 
         <dependency>
-            <groupId>am.techmock</groupId>
-            <artifactId>trading-engine</artifactId>
-            <version>0.0.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>rl4j-api</artifactId>
-            <version>1.0.0-M1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.deeplearning4j</groupId>
-            <artifactId>rl4j-core</artifactId>
-            <version>1.0.0-M1.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>5.1.0</version>
+            <groupId>org.ta4j</groupId>
+            <artifactId>ta4j-core</artifactId>
+            <version>0.14</version>
         </dependency>
 
         <dependency>

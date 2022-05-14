@@ -4,4 +4,11 @@ target
 logs
 .metaapi
 .DS_Store
-networks/*.zip
+
+networks/*
+predictions/*
+indicators/*
+
+!predictions
+!networks
+!indicators
