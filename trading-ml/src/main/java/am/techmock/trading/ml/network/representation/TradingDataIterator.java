@@ -75,6 +75,10 @@ public class TradingDataIterator implements DataSetIterator {
 		return 1;
 	}
 
+	public int dataLength() {
+		return this.seriesEndIndex - this.seriesIndex;
+	}
+
 	@Override
 	public boolean hasNext() {
 		return this.seriesIndex < this.seriesEndIndex;

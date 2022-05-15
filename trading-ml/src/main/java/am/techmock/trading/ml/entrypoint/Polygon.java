@@ -5,6 +5,8 @@ import am.techmock.trading.ml.network.DataNormalizer;
 import am.techmock.trading.ml.network.representation.TradingDataIterator;
 import am.techmock.trading.ml.network.representation.TradingDataProvider;
 import am.techmock.trading.ml.tools.CommonFileTools;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.jfree.data.xy.XYSeries;
@@ -38,6 +40,11 @@ public class Polygon {
 		final XYSeries actual = new XYSeries("Actual");
 		final XYSeries predictions = new XYSeries("Prediction");
 
+		ProgressBar pb = new ProgressBarBuilder()
+				.setTaskName("Prediction").setInitialMax(iterator.dataLength())
+				.setUpdateIntervalMillis(100).setMaxRenderedLength(100)
+				.continuousUpdate().build();
+
 		int seriesIndex = 0;
 		while (iterator.hasNext()) {
 
@@ -49,8 +56,10 @@ public class Polygon {
 			actual.add(seriesIndex, expected.getDouble(0, 0));
 
 			seriesIndex++;
+			pb.step();
 		}
 
+		pb.close();
 		TradingDataChart.drawChart(
 				title(outputDirectory, network),
 				actual,

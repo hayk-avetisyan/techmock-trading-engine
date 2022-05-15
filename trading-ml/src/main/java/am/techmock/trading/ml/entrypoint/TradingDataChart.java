@@ -105,7 +105,7 @@ public class TradingDataChart extends JFrame {
 		String destination = title(indicatorTypes, outputDirectory);
 
 		try {
-			ChartUtils.saveChartAsPNG(new File(destination), chart, (int) (IMAGE_HEIGHT * 2.5), IMAGE_HEIGHT);
+			ChartUtils.saveChartAsPNG(new File(destination), chart, IMAGE_HEIGHT * 2, IMAGE_HEIGHT);
 
 		} catch (IOException e) {
 			logger.warn("Unable to save chart at destination {}", destination);
