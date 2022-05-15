@@ -14,14 +14,20 @@ import org.ta4j.core.num.Num;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class for creating and managing trading indicators from time series data
+ */
 public class TradingDataProvider {
 
+	/** The all available indicators */
 	private Map<IndicatorType, Indicator<Num>> indicators;
+
+	/** @see ClosePriceIndicator */
 	private ClosePriceIndicator ClosePrice;
 
 	public TradingDataProvider(BarSeries series) {
-		this.ClosePrice = new ClosePriceIndicator(series);
 		this.indicators = new HashMap<>();
+		this.ClosePrice = new ClosePriceIndicator(series);
 
 		this.indicators.put(IndicatorType.ZeroLine, new AxisIndicator(0));
 		this.indicators.put(IndicatorType.MACD, new MACDIndicator(ClosePrice, 12, 26));
@@ -51,14 +57,12 @@ public class TradingDataProvider {
 		this.indicators.put(IndicatorType.LowPrice, new LowPriceIndicator(series));
 	}
 
+	/** @return the data of the given indicator at the given index */
 	public double data(IndicatorType indicatorType, int seriesIndex) {
 		return indicators.get(indicatorType).getValue(seriesIndex).doubleValue();
 	}
 
-	public Indicator<Num> indicator(IndicatorType indicatorType) {
-		return this.indicators.get(indicatorType);
-	}
-
+	/** @return {@link BarSeries} of trading price time series */
 	public BarSeries getSeries() {
 		return ClosePrice.getBarSeries();
 	}

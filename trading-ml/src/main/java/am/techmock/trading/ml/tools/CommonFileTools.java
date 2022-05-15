@@ -19,8 +19,14 @@ import java.util.List;
 public class CommonFileTools {
 
 	private static final DateTimeFormatter dateFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	private static final boolean READ_PIP = false;
 
+	/** If is true fractional part of currency prices are used as a basic data */
+	private static final boolean READ_PIP = true;
+
+	/**
+	 * Creates and returns a {@link BarSeries} of
+	 * trading data using the given csv file
+	 */
 	public static BarSeries loadSeries(String CSVFilepath) {
 		BaseBarSeries series = new BaseBarSeries();
 
@@ -51,8 +57,8 @@ public class CommonFileTools {
 		}
 	}
 
-	public static String resolveFilepath(String filepath, boolean exists) {
-
+	/** Checks if a file is allowed to exist or not */
+	public static String allowedToExist(String filepath, boolean exists) {
 		filepath = filepath.trim();
 
 		if(fileExists(filepath) != exists) {
@@ -67,20 +73,10 @@ public class CommonFileTools {
 		return new File(filepath).exists();
 	}
 
-	private static ZonedDateTime readDate(List<Writable> data) {
-		String dateString = data.get(0).toString();
-
-		return ZonedDateTime.of(
-				LocalDate.parse(dateString, dateFormatter),
-				LocalTime.of(0, 0),
-				ZoneId.of("America/New_York")
-		);
-	}
-
-	private static DecimalNum readVolume(List<Writable> data) {
-		return DecimalNum.valueOf(data.get(6).toDouble());
-	}
-
+	/**
+	 * Reads and returns the price at the given index of {@link Writable}
+	 * @return pip if {@link #READ_PIP} is true and pure price otherwise
+	 */
 	private static DecimalNum readValue(List<Writable> data, int index) {
 		return READ_PIP
 				? readPipValue(data, index)
@@ -95,6 +91,20 @@ public class CommonFileTools {
 		double price = data.get(index).toDouble();
 		int pip = (int) ((price - (int) price) * 10000);
 		return DecimalNum.valueOf(pip / 100D);
+	}
+
+	private static DecimalNum readVolume(List<Writable> data) {
+		return DecimalNum.valueOf(data.get(6).toDouble());
+	}
+
+	private static ZonedDateTime readDate(List<Writable> data) {
+		String dateString = data.get(0).toString();
+
+		return ZonedDateTime.of(
+				LocalDate.parse(dateString, dateFormatter),
+				LocalTime.of(0, 0),
+				ZoneId.of("America/New_York")
+		);
 	}
 
 }

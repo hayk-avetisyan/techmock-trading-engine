@@ -21,9 +21,9 @@ public class MlApplication {
 		if(check(PREDICT, args[0])) {
 			checkGreaterThan(args.length, 4);
 
-			String network = CommonFileTools.resolveFilepath(args[1], true);
-			String dataset = CommonFileTools.resolveFilepath(args[2], true);
-			String outputDirectory = CommonFileTools.resolveFilepath(args[3], true);
+			String network = CommonFileTools.allowedToExist(args[1], true);
+			String dataset = CommonFileTools.allowedToExist(args[2], true);
+			String outputDirectory = CommonFileTools.allowedToExist(args[3], true);
 
 			List<IndicatorType> indicatorTypes = new ArrayList<>();
 			parseIndicators(args, 4, indicatorTypes);
@@ -36,8 +36,8 @@ public class MlApplication {
 
 			checkGreaterThan(args.length, 3);
 
-			String network = CommonFileTools.resolveFilepath(args[1], false);
-			String dataset = CommonFileTools.resolveFilepath(args[2], true);
+			String network = CommonFileTools.allowedToExist(args[1], false);
+			String dataset = CommonFileTools.allowedToExist(args[2], true);
 
 			List<IndicatorType> indicatorTypes = new ArrayList<>();
 			parseIndicators(args, 3, indicatorTypes);
@@ -51,8 +51,8 @@ public class MlApplication {
 			int startIndex = readInt(args[1]);
 			int length = readInt(args[2]);
 
-			String dataset = CommonFileTools.resolveFilepath(args[3], true);
-			String output = CommonFileTools.resolveFilepath(args[4], true);
+			String dataset = CommonFileTools.allowedToExist(args[3], true);
+			String output = CommonFileTools.allowedToExist(args[4], true);
 
 			List<List<IndicatorType>> indicatorTypes = new ArrayList<>();
 			List<IndicatorType> types;

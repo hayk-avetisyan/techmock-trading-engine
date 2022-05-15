@@ -62,7 +62,7 @@ public class TradingDataChart extends JFrame {
 		 new TradingDataChart("Trading data chart", panels);
 	}
 
-	public static void drawChart(String destination, XYSeries ... data) throws IOException {
+	public static void drawChart(String imageDestination, XYSeries ... data) throws IOException {
 
 		XYSeriesCollection dataset = new XYSeriesCollection();
 
@@ -74,7 +74,7 @@ public class TradingDataChart extends JFrame {
 				"Prices", "Time", "Trading Prices", dataset
 		);
 
-		ChartUtils.saveChartAsPNG(new File(destination), chart, IMAGE_HEIGHT * 3, IMAGE_HEIGHT);
+		ChartUtils.saveChartAsPNG(new File(imageDestination), chart, IMAGE_HEIGHT * 3, IMAGE_HEIGHT);
 		show(new ChartPanel(chart));
 	}
 
@@ -84,18 +84,16 @@ public class TradingDataChart extends JFrame {
 	) {
 
 		XYSeries series;
-		Indicator<Num> indicator;
 
 		int seriesSize = startIndex + length;
 		XYSeriesCollection dataset = new XYSeriesCollection();
 
 		for (IndicatorType indicatorType : indicatorTypes) {
 
-			indicator = provider.indicator(indicatorType);
 			series = new XYSeries(indicatorType.getName());
 
 			for (int i = 0, seriesIndex = startIndex; seriesIndex < seriesSize; seriesIndex++, i++) {
-				series.add(i, indicator.getValue(seriesIndex).doubleValue());
+				series.add(i, provider.data(indicatorType, seriesIndex));
 			}
 			dataset.addSeries(series);
 		}
@@ -107,7 +105,7 @@ public class TradingDataChart extends JFrame {
 		String destination = title(indicatorTypes, outputDirectory);
 
 		try {
-			ChartUtils.saveChartAsPNG(new File(destination), chart, IMAGE_HEIGHT * 3, IMAGE_HEIGHT);
+			ChartUtils.saveChartAsPNG(new File(destination), chart, (int) (IMAGE_HEIGHT * 2.5), IMAGE_HEIGHT);
 
 		} catch (IOException e) {
 			logger.warn("Unable to save chart at destination {}", destination);

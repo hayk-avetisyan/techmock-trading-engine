@@ -11,14 +11,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.TreeSet;
 
+/**
+ * {@link DataSetIterator} to iterate over trading time series data
+ */
 public class TradingDataIterator implements DataSetIterator {
 
 	private final TradingDataProvider dataProvider;
+
+	/** {@link DataSetPreProcessor}, used to normalize the data before providing to the agent */
 	private DataSetPreProcessor preProcessor;
 
 	/**
 	 * Dataset batch size
-	 * Defines how much historical data the agent can see sequentially peer iteration:
+	 * Defines how much historical data is provided to the agent peer iteration:
 	 *
 	 *  _____________________________________________________
 	 * |             | 01.01 | 02.01 | 03.01 | 04.01 | 05.01 |
@@ -33,14 +38,20 @@ public class TradingDataIterator implements DataSetIterator {
 	 */
 	private final int batchSize;
 
+	/** Count of used indicators */
 	private final int featureSize;
+
+	/** After how many steps to predict */
 	private int predictionStep;
 
+	/** Current time series index */
 	private int seriesIndex;
+
+	/** Last available time series index */
 	private int seriesEndIndex;
 
+	/** Indicators selected to be used in prediction */
 	private TreeSet<IndicatorType> indicatorTypes;
-
 
 	public TradingDataIterator(TradingDataProvider dataProvider, Collection<IndicatorType> indicatorTypes, int batchSize, int predictionStep) {
 		this.batchSize = batchSize;
@@ -52,11 +63,13 @@ public class TradingDataIterator implements DataSetIterator {
 		reset();
 	}
 
+	/** @return agent input data length */
 	@Override
 	public int inputColumns() {
 		return this.featureSize;
 	}
 
+	/** @return label count of agent per input */
 	@Override
 	public int totalOutcomes() {
 		return 1;
@@ -67,28 +80,36 @@ public class TradingDataIterator implements DataSetIterator {
 		return this.seriesIndex < this.seriesEndIndex;
 	}
 
+	/**
+	 *
+	 * Input values are calculated from trading price time series
+	 * using {@link #indicatorTypes}
+	 *
+	 * @return {@link DataSet} of the agent input values
+	 *      with the length of the given batchSize if available
+	 *      starting from {@link #seriesIndex}
+	 */
 	@Override
 	public DataSet next(int customBatchSize) {
 
 		int batchSize = Math.min(customBatchSize, this.seriesEndIndex - this.seriesIndex);
 
-		INDArray observationArray = Nd4j.zeros(batchSize, this.featureSize, 1);
-		INDArray labelArray = Nd4j.zeros(batchSize, 1);
-
+		INDArray observations = Nd4j.zeros(batchSize, this.featureSize, 1);
+		INDArray labels = Nd4j.zeros(batchSize, 1);
 
 		for (int batchIndex = 0; batchIndex < batchSize; batchIndex++) {
 
 			int featureIndex = 0;
 			for (IndicatorType indicatorType : indicatorTypes) {
 
-				observationArray.putScalar(
+				observations.putScalar(
 						batchIndex, featureIndex, 0,
 						this.dataProvider.data(indicatorType, this.seriesIndex)
 				);
 				featureIndex++;
 			}
 
-			labelArray.putScalar(
+			labels.putScalar(
 					batchIndex, 0,
 					this.dataProvider.data(
 							IndicatorType.ClosePrice,
@@ -98,7 +119,7 @@ public class TradingDataIterator implements DataSetIterator {
 			this.seriesIndex++;
 		}
 
-		DataSet dataSet = new DataSet(observationArray, labelArray);
+		DataSet dataSet = new DataSet(observations, labels);
 
 		if(this.preProcessor != null) {
 			this.preProcessor.preProcess(dataSet);
@@ -111,6 +132,7 @@ public class TradingDataIterator implements DataSetIterator {
 		return this.next(this.batchSize);
 	}
 
+	/** Moves the {@link #seriesIndex} to the beginning of the time series */
 	@Override
 	public void reset() {
 		this.seriesIndex = this.dataProvider.getSeries().getBeginIndex() + 100;

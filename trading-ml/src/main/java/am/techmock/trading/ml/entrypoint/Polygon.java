@@ -27,22 +27,26 @@ public class Polygon {
 		MultiLayerNetwork net = MultiLayerNetwork.load(new File(network), true);
 		TradingDataProvider dataProvider = new TradingDataProvider(series);
 
-		TradingDataIterator dataIterator = new TradingDataIterator(dataProvider, indicatorTypes,1,1);
+		TradingDataIterator iterator = new TradingDataIterator(dataProvider, indicatorTypes,1,1);
 		DataNormalizer normalizer = new DataNormalizer();
-		normalizer.fit(dataIterator);
+
+		normalizer.fit(iterator);
+		iterator.setPreProcessor(normalizer);
 
 		DataSet dataSet;
-		INDArray prediction;
+		INDArray prediction, expected;
 		final XYSeries actual = new XYSeries("Actual");
 		final XYSeries predictions = new XYSeries("Prediction");
 
 		int seriesIndex = 0;
-		while (dataIterator.hasNext()) {
-			dataSet = dataIterator.next();
+		while (iterator.hasNext()) {
 
-			prediction = normalizer.revertLabels(net.output(dataSet.getFeatures()));
+			dataSet = iterator.next();
+			prediction = net.output(dataSet.getFeatures());
+			expected = dataSet.getLabels();
+
 			predictions.add(seriesIndex, prediction.getDouble(0, 0));
-			actual.add(seriesIndex, normalizer.revertLabels(dataSet.getLabels()).getDouble(0, 0));
+			actual.add(seriesIndex, expected.getDouble(0, 0));
 
 			seriesIndex++;
 		}
@@ -56,6 +60,6 @@ public class Polygon {
 
 	public static String title(String outputDirectory, String network) {
 		network = FilenameUtils.getBaseName(network);
-		return outputDirectory + "/prediction-"+ network  +".png";
+		return outputDirectory + "/"+ network  +".png";
 	}
 }

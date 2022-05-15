@@ -21,11 +21,11 @@ public class PrepareNetwork {
 
 	private static final Logger logger = LoggerFactory.getLogger(PrepareNetwork.class);
 
-	public static final int EPOCHS = 2000;
+	public static final int EPOCHS = 1000;
 	public static final int BATCH_SIZE = 20;
 	public static final int PREDICTION_STEP = 1;
 
-	public static void prepare(String network, String dataset, List<IndicatorType> indicatorTypes) throws IOException {
+	public static void prepare(String networkDirectory, String dataset, List<IndicatorType> indicatorTypes) throws IOException {
 
 		TradingDataProvider provider = new TradingDataProvider(CommonFileTools.loadSeries(dataset));
 
@@ -41,7 +41,7 @@ public class PrepareNetwork {
 
 		ProgressBar pb = new ProgressBarBuilder()
 				.setTaskName("Training").setInitialMax(EPOCHS)
-				.setUpdateIntervalMillis(3000).setMaxRenderedLength(150)
+				.setUpdateIntervalMillis(3000).setMaxRenderedLength(100)
 				.continuousUpdate().build();
 
 		long  start = System.currentTimeMillis();
@@ -49,23 +49,22 @@ public class PrepareNetwork {
 		for (int epoch = 1; epoch <= EPOCHS; epoch++) {
 
 			while (iterator.hasNext()) {
-				net.fit(iterator);
+				net.fit(iterator.next());
+				net.rnnClearPreviousState();
 			}
 
 			iterator.reset();
-			net.rnnClearPreviousState();
 			net.incrementEpochCount();
 
-			pb.setExtraMessage("Score: "+ net.score());
 			pb.step();
 			System.gc();
 		}
 
-		pb.pause();
+		pb.close();
 		logger.info("Training finished. Duration: {}", time(System.currentTimeMillis() - start));
 
-		ModelSerializer.writeModel(net, new File(network),true);
-		logger.info("Model saved - {}", network);
+		ModelSerializer.writeModel(net, new File(networkDirectory),true);
+		logger.info("Model saved - {}", networkDirectory);
 		System.exit(0);
 	}
 
