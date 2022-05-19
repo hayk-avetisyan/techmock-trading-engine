@@ -41,7 +41,7 @@ public class TradingDataIterator implements DataSetIterator {
 	/** Count of used indicators */
 	private final int featureSize;
 
-	/** After how many steps to predict */
+	/** Steps ahead to predict */
 	private int predictionStep;
 
 	/** Current time series index */
@@ -50,7 +50,13 @@ public class TradingDataIterator implements DataSetIterator {
 	/** Last available time series index */
 	private int seriesEndIndex;
 
-	/** Indicators selected to be used in prediction */
+	/**
+	 * Indicators selected to be used in prediction
+	 *
+	 * The {@link TreeSet} data structure is used so that the order of the indicators
+	 * does not interfere with the prediction results.
+	 *
+	 */
 	private TreeSet<IndicatorType> indicatorTypes;
 
 	public TradingDataIterator(TradingDataProvider dataProvider, Collection<IndicatorType> indicatorTypes, int batchSize, int predictionStep) {
@@ -61,6 +67,13 @@ public class TradingDataIterator implements DataSetIterator {
 		this.indicatorTypes = new TreeSet<>(indicatorTypes);
 		this.seriesEndIndex = this.dataProvider.getSeries().getEndIndex() - this.predictionStep;
 		reset();
+
+		StringBuilder indicators = new StringBuilder("\nSelected indicators");
+		for (IndicatorType indicatorType : this.indicatorTypes) {
+			indicators.append("\n\t").append(indicatorType.getName());
+		}
+
+		System.out.println(indicators);
 	}
 
 	/** @return agent input data length */
@@ -136,7 +149,13 @@ public class TradingDataIterator implements DataSetIterator {
 		return this.next(this.batchSize);
 	}
 
-	/** Moves the {@link #seriesIndex} to the beginning of the time series */
+	/**
+	 * Moves the {@link #seriesIndex} to the beginning of the time series
+	 *
+	 * We're adding 100 to initial index because
+	 * the current values of the indicators are based on previous data,
+	 * so the smaller the index, the greater the computation error.
+	 */
 	@Override
 	public void reset() {
 		this.seriesIndex = this.dataProvider.getSeries().getBeginIndex() + 100;

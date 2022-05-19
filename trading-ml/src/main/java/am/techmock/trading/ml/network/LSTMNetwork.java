@@ -13,9 +13,9 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 public class LSTMNetwork {
 
-	private static final int LSTM = 250;
-	private static final int DENSE_1 = 100;
-	private static final int DENSE_2 = 30;
+	private static final int LSTM = 150;
+	private static final int DENSE_1 = 150;
+	private static final int DENSE_2 = 150;
 
 	public static MultiLayerNetwork buildNetwork(int nIn, int nOut, int batchSize) {
 
@@ -45,17 +45,17 @@ public class LSTMNetwork {
 				.layer(2, new DenseLayer.Builder()
 						.nIn(LSTM)
 						.nOut(DENSE_1)
-						.activation(Activation.RELU)
+						.activation(Activation.LEAKYRELU)
 						.build())
 				.layer(3, new DenseLayer.Builder()
 						.nIn(DENSE_1)
 						.nOut(DENSE_2)
-						.activation(Activation.RELU)
+						.activation(Activation.LEAKYRELU)
 						.build())
 				.layer(4, new OutputLayer.Builder()
 						.nIn(DENSE_2)
 						.nOut(nOut)
-						.activation(Activation.RELU)
+						.activation(Activation.LEAKYRELU)
 						.lossFunction(LossFunctions.LossFunction.MSE)
 						.build())
 				.build();

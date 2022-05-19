@@ -12,8 +12,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ta4j.core.Indicator;
-import org.ta4j.core.num.Num;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,7 +72,7 @@ public class TradingDataChart extends JFrame {
 				"Prices", "Time", "Trading Prices", dataset
 		);
 
-		ChartUtils.saveChartAsPNG(new File(imageDestination), chart, IMAGE_HEIGHT * 3, IMAGE_HEIGHT);
+		ChartUtils.saveChartAsPNG(new File(imageDestination), chart, IMAGE_HEIGHT * 2, IMAGE_HEIGHT);
 		show(new ChartPanel(chart));
 	}
 

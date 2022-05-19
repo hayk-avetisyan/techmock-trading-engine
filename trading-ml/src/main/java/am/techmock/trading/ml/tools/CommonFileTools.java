@@ -3,6 +3,8 @@ package am.techmock.trading.ml.tools;
 import org.datavec.api.records.reader.impl.csv.CSVRecordReader;
 import org.datavec.api.split.FileSplit;
 import org.datavec.api.writable.Writable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;
 import org.ta4j.core.BaseBarSeries;
@@ -10,7 +12,6 @@ import org.ta4j.core.num.DecimalNum;
 import org.ta4j.core.num.Num;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -18,16 +19,17 @@ import java.util.List;
 
 public class CommonFileTools {
 
+	private static final Logger logger = LoggerFactory.getLogger(CommonFileTools.class);
 	private static final DateTimeFormatter dateFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	/** If is true fractional part of currency prices are used as a basic data */
-	private static final boolean READ_PIP = true;
+	/** If is true fractional part of currency prices are used as initial data */
+	private static final boolean READ_PIP = false;
 
 	/**
 	 * Creates and returns a {@link BarSeries} of
 	 * trading data using the given csv file
 	 */
-	public static BarSeries loadSeries(String CSVFilepath) {
+	public static BarSeries loadSeries(String csv) {
 		BaseBarSeries series = new BaseBarSeries();
 
 		try {
@@ -37,7 +39,7 @@ public class CommonFileTools {
 			Num open, high, low, close, volume;
 
 			CSVRecordReader reader = new CSVRecordReader();
-			reader.initialize(new FileSplit(new File(CSVFilepath)));
+			reader.initialize(new FileSplit(new File(csv)));
 
 			while (reader.hasNext()) {
 				data = reader.next();
@@ -50,11 +52,13 @@ public class CommonFileTools {
 				series.addBar(new BaseBar(Duration.ofDays(1), date, open, high, low, close, volume, DecimalNum.valueOf(0)));
 			}
 
-			return series;
-
-		} catch (IOException | InterruptedException e) {
-			throw new IllegalStateException(e);
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+			System.out.println("Error occurred while parsing trading data file: "+ csv);
+			System.exit(0);
 		}
+
+		return series;
 	}
 
 	/** Checks if a file is allowed to exist or not */
